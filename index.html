@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body onload="load()">
+    <h1>Order</h1>
+    
+    ID: <input type="text" id="id"><br>
+    Name: <input type="text" id="name"><br>
+    Price: <input type="text" id="price"><br>
+    <button onclick="save()">Save</button>
+    <button onclick="clear()">Clear</button>
+
+    <h2>Order items</h2>
+    <div id="table">
+
+    </div>
+
+</body>
+</html>
+
+<script>
+    const url ="https://2u7k88arxk.execute-api.us-east-2.amazonaws.com/items"
+
+    function load(){
+        fetch(url)
+        .then(res=>res.json())
+        .then(data=>{
+            let str = ""
+            for (let i=0; i<data.Items.length; i++){
+
+                let deleteLink = `<button onclick="remove('${data.Items[i].id}')">Delete</button>`
+                let editLink = `<button onclick="edit('${data.Items[i].id}', '${data.Items[i].name}', '${data.Items[i].price}')">Edit</button>`
+
+                str = str + `<li>${data.Items[i].id} | ${data.Items[i].name} | ${data.Items[i].price} ${deleteLink} ${editLink}</li>`
+            }
+            
+            document.querySelector("#table").innerHTML = str
+        })
+    }
+    
+    function edit(id, name, price){
+        document.querySelector("#id").value = id
+        document.querySelector("#name").value = name
+        document.querySelector("#price").value = price
+    }
+
+    function clear(){
+        document.querySelector("#id").value = ''
+        document.querySelector("#name").value = ''
+        document.querySelector("#price").value = ''
+    }
+
+    function remove(id){
+        fetch(url+"/"+id, {
+            method: 'delete'
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            load()
+        })
+    }
+
+    function save(){
+        let id = document.querySelector("#id").value
+        let name = document.querySelector("#name").value
+        let price = document.querySelector("#price").value
+        fetch(url, {
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            method: 'put',
+            body: JSON.stringify({id: id, name: name, price: price})
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            load()
+        })
+    }
+</script>
