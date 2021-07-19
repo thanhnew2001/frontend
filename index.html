@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +15,7 @@
     Name: <input type="text" id="name"><br>
     Price: <input type="text" id="price"><br>
     <button onclick="save()">Save</button>
-    <button onclick="clear()">Clear</button>
+    <button onclick="addNew()">Add new</button>
 
     <h2>Order items</h2>
     <div id="table">
@@ -49,10 +51,12 @@
         document.querySelector("#price").value = price
     }
 
-    function clear(){
+    function addNew(){
+    
         document.querySelector("#id").value = ''
         document.querySelector("#name").value = ''
         document.querySelector("#price").value = ''
+        console.log(document.querySelector("#id").value)
     }
 
     function remove(id){
